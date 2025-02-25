@@ -1,5 +1,5 @@
 import re
-from parser_generic import MedicalDocParser
+from .parser_generic import MedicalDocParser
 
 
 class PrescriptionParser(MedicalDocParser):
@@ -21,16 +21,21 @@ class PrescriptionParser(MedicalDocParser):
             "patient_address": self.get_field("patient_address"),
             "medicines": self.get_field("medicines"),
             "directions": self.get_field("directions"),
-            "refill": self.get_field("refill")
+            "refill": self.get_field("refill"), 
+           "condition": self.get_field("condition"), 
         }        
     
     def get_field(self, field_name):
         pattern_dict = {
             "patient_name": {"pattern": "Name:(.*)Date", "flags": 0},
             "patient_address": {"pattern": "Address:(.*)\n", "flags": 0},
-            "medicines": {"pattern": "Address:[^\n]*(.*)Directions", "flags": re.DOTALL},
+           "medicines": {
+    "pattern": "Medicines:\s*([\s\S]*?)(?=\nDirections:)",
+    "flags": 0
+},
             "directions": {"pattern": "Directions:.(.*)Refill", "flags": re.DOTALL},
             "refill": {"pattern": "Refill:.*(\d).*times", "flags": 0},
+            "condition": {"pattern": "Condition:\s*(.*)", "flags": 0},
         }
 
         pattern_object = pattern_dict.get(field_name)
@@ -80,7 +85,7 @@ New York, Phone (000)-111-2222
 Name: Marta Sharapova Date: 5/11/2022
 
 Address: 9 tennis court, new Russia, DC
-
+Condition: Cold and cough
 Prednisone 20 md
 Lialda 2.4 gram
 
@@ -90,7 +95,8 @@ Prednisone, Taper 5 mg every 3 days,
 Finish in 2.5 weeks 7
 Lialda - take 2 pill everyday for 1 month
 
-Refill: _2_times"""
+Refill: _2_times
+"""
 
     pp = PrescriptionParser(document_text)
     print(pp.parse())

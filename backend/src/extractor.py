@@ -1,10 +1,11 @@
 from pdf2image import convert_from_path
 import pytesseract
-import utils
-from parser_patient_details import PatientDetailsParser
-from parser_prescription import PrescriptionParser
+from .utils import preprocess_image
+from .parser_patient_details import PatientDetailsParser
+from .parser_prescription import PrescriptionParser
 
-POPPLER_PATH = r"C:/poppler-24.02.0/Library/bin"
+
+POPPLER_PATH = r"C:\poppler-24.02.0\poppler-24.08.0\Library\bin"
 TESSERACT_ENGINE_PATH = r"C:/Program Files/Tesseract-OCR/tesseract.exe"
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_ENGINE_PATH
 
@@ -12,10 +13,11 @@ pytesseract.pytesseract.tesseract_cmd = TESSERACT_ENGINE_PATH
 def extract(file_path, file_format):
     # 1. extracting text from pdf file
     pages = convert_from_path(file_path, poppler_path=POPPLER_PATH)
+    print(f"Extracting file: {file_path}, Format: {file_format}")
     document_text = ""
 
     for page in pages:
-        processed_image = utils.preprocess_image(page)
+        processed_image = preprocess_image(page)
         text = pytesseract.image_to_string(processed_image, lang="eng")
         document_text = document_text + "\n" + text
 

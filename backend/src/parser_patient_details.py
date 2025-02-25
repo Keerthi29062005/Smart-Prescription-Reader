@@ -1,5 +1,5 @@
 import re
-from parser_generic import MedicalDocParser
+from .parser_generic import MedicalDocParser
 
 class PatientDetailsParser(MedicalDocParser):
     def __init__(self, text):

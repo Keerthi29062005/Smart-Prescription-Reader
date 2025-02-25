@@ -1,7 +1,11 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-
+venv/
+frontend/venv/
+Thumbs.db
+*.pyc
+*.pyo
 # C extensions
 *.so
 
